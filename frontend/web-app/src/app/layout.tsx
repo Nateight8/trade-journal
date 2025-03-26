@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ApolloWrapper } from "@/graphql/apollo-wraper";
+import { ApolloWrapper } from "@/components/providers/apollo-wraper";
+import { AppSidebar } from "@/components/navigation/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppNav } from "@/components/navigation/app-nav";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const geistSans = Geist({
   variable: "--font-geist-sans",
-  weight: "100 900",
+  subsets: ["latin"],
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+
+const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  weight: "100 900",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +31,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ApolloWrapper>{children}</ApolloWrapper>
+        <ApolloWrapper>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="overflow-hidden px-4 md:px-6 lg:px-8">
+              <main>
+                <AppNav />
+                {children}
+              </main>
+            </SidebarInset>
+          </SidebarProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

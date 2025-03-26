@@ -1,17 +1,14 @@
 "use client";
-
-import userOperations, { GetLoggedInUser } from "@/graphql/operations/user";
-import { useQuery } from "@apollo/client";
-import { redirect } from "next/navigation";
+import { PiIcon } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
-  const { data } = useQuery<GetLoggedInUser>(
-    userOperations.Querries.createPost
+  return (
+    <div className="h-screen w-full flex items-center justify-center">
+      <div className=" font-bold">
+        <button onClick={() => signIn("google")}>Sign In</button>
+        <PiIcon />
+      </div>
+    </div>
   );
-
-  //TODA: WE WILL THINK OF HOW TO USE STATES
-
-  if (data?.getLoggedInUser.status === 200) {
-    redirect("/dashboard");
-  }
 }
