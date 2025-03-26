@@ -10,6 +10,15 @@ const tradeOperations = {
         }
       }
     `,
+
+    updateTrade: gql`
+      mutation Mutation($updateTradeId: ID!, $input: UpdateTradeInput!) {
+        updateTrade(id: $updateTradeId, input: $input) {
+          message
+          status
+        }
+      }
+    `,
   },
 
   Queries: {
@@ -22,6 +31,7 @@ const tradeOperations = {
           volume
           status
           outcome
+          tradeNote
         }
       }
     `,

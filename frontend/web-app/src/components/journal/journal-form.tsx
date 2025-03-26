@@ -25,46 +25,27 @@ import {
   defaultValues,
 } from "@/lib/schemas/trade-journal";
 import { toast } from "sonner";
-import { useMutation } from "@apollo/client";
-import tradeOperations from "@/graphql/operations/trade-operations";
+import { MutationFunction, OperationVariables } from "@apollo/client";
 
-interface TradesQueryResult {
-  trades: Array<{
-    id: string;
-    instrument: string;
-    position: string;
-    volume: number;
+interface CreateTradeResponse {
+  createTrade: {
+    message: string;
     status: string;
-    outcome: string;
-    __typename: string;
-  }>;
+  };
 }
 
-export function JournalForm() {
+export function JournalForm({
+  createTrade,
+  loading,
+}: {
+  createTrade: MutationFunction<CreateTradeResponse, OperationVariables>;
+  loading: boolean;
+  data?: CreateTradeResponse | null;
+}) {
   const form = useForm<TradeJournalFormValues>({
     resolver: zodResolver(tradeJournalSchema),
     defaultValues,
   });
-
-  const [createTrade, { loading }] = useMutation(
-    tradeOperations.Mutations.createTrade,
-    {
-      update(cache, { data: { createTrade } }) {
-        // Read the existing trades query
-        const existingTrades = cache.readQuery<TradesQueryResult>({
-          query: tradeOperations.Queries.getAllTrades,
-        });
-
-        // Write back to the cache with the new trade
-        cache.writeQuery({
-          query: tradeOperations.Queries.getAllTrades,
-          data: {
-            trades: [...(existingTrades?.trades || []), createTrade],
-          },
-        });
-      },
-    }
-  );
 
   async function onSubmit(data: TradeJournalFormValues) {
     try {
@@ -82,7 +63,7 @@ export function JournalForm() {
         '[aria-label="Close"]'
       ) as HTMLButtonElement;
       closeButton?.click();
-    } catch (_error) {
+    } catch {
       toast.error("Failed to add trade journal entry. Please try again.");
     }
   }

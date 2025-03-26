@@ -19,8 +19,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -78,10 +76,29 @@ import {
   useTransition,
   useEffect,
 } from "react";
-import { type TradeLog } from "@/lib/mock-data";
+
 import { cn } from "@/lib/utils";
 import tradeOperations from "@/graphql/operations/trade-operations";
 import { useQuery } from "@apollo/client";
+
+import UpdateJournal from "@/components/journal/update-journal";
+
+interface TradeLog {
+  id: string;
+  instrument: string;
+  position: string;
+  volume: number;
+  status: string;
+  outcome: string;
+  image: string;
+  mediaChart: {
+    name: string;
+    image: string;
+  };
+  note: string;
+  riskReward: string;
+  __typename: string;
+}
 
 type Item = TradeLog;
 
@@ -92,6 +109,7 @@ interface Trade {
   volume: number;
   status: string;
   outcome: string;
+  tradeNote?: string;
   __typename: string;
 }
 
@@ -260,7 +278,7 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
     header: "Note",
     accessorKey: "note",
     cell: ({ row }) => (
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-muted-foreground truncate max-w-[200px]">
         {row.getValue("note")}
       </div>
     ),
@@ -268,7 +286,7 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
   },
   {
     id: "actions",
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="">Actions</span>,
     cell: ({ row }) => (
       <RowActions setData={setData} data={data} item={row.original} />
     ),
@@ -311,7 +329,7 @@ export default function TradeLogTable() {
         name: "Chart",
         image: "/images/chart.png",
       },
-      note: "",
+      note: trade.tradeNote || "write a note after the trade", // Use the note from API if available, otherwise empty string
       riskReward: "1:2",
     }));
   }, [tradesData]);
@@ -710,22 +728,6 @@ function RowActions({
   const [isUpdatePending, startUpdateTransition] = useTransition();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const handleStatusToggle = () => {
-    startUpdateTransition(() => {
-      const updatedData = data.map((dataItem) => {
-        if (dataItem.volume === item.volume) {
-          return {
-            ...dataItem,
-            status: item.status === "Active" ? "Closed" : "Active",
-            outcome: item.status === "Active" ? "Running" : item.outcome,
-          };
-        }
-        return dataItem;
-      });
-      setData(updatedData);
-    });
-  };
-
   const handleDelete = () => {
     startUpdateTransition(() => {
       const updatedData = data.filter(
@@ -753,21 +755,8 @@ function RowActions({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-auto">
           <DropdownMenuGroup>
-            <DropdownMenuItem
-              onClick={handleStatusToggle}
-              disabled={isUpdatePending}
-            >
-              {item.status === "Active" ? "Close trade" : "Activate trade"}
-            </DropdownMenuItem>
+            <UpdateJournal tradeId={item.id} />
           </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => setShowDeleteDialog(true)}
-            variant="destructive"
-            className="dark:data-[variant=destructive]:focus:bg-destructive/10"
-          >
-            Delete
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

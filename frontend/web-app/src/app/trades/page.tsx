@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import AddJournal from "@/components/journal-dialog";
+import AddJournal from "@/components/journal/add-journal";
+
 import TradeLogTable from "@/components/table/trade-logs-table";
 
 export default async function Page() {
@@ -20,7 +21,7 @@ export default async function Page() {
           <AddJournal />
         </div>
       </div>
-      <div className="min-h-[100vh] flex-1 md:min-h-min py-4">
+      <div className="h-[calc(100vh-15rem)] min-h-[100vh] flex-1 md:min-h-min py-4">
         <TradeLogTable />
       </div>
     </>

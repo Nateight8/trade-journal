@@ -37,7 +37,7 @@ interface TradesQueryResult {
 export default function AddJournal() {
   const [open, setOpen] = useState(false);
 
-  const [createTrade, { loading, data }] = useMutation<
+  const [createTrade, { loading }] = useMutation<
     CreateTradeResponse,
     OperationVariables
   >(tradeOperations.Mutations.createTrade, {

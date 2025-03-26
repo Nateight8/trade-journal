@@ -21,10 +21,6 @@ import {
 import {
   RiScanLine,
   RiBardLine,
-  RiUserFollowLine,
-  RiCodeSSlashLine,
-  RiLoginCircleLine,
-  RiLayoutLeftLine,
   RiSettings3Line,
   RiLeafLine,
   RiLogoutBoxLine,

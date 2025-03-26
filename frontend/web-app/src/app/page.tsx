@@ -1,4 +1,5 @@
 "use client";
+
 import { PiIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
 // import { signIn } from "next-auth/react";
@@ -9,6 +10,7 @@ export default function Home() {
       <div className=" font-bold">
         <button onClick={() => signIn()}>Sign In</button>
         <PiIcon />
+        {/* <AddNote /> */}
       </div>
     </div>
   );
