@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { usePathname } from "next/navigation";
 
 // import { SearchForm } from "@/components/search-form";
 
@@ -26,6 +29,7 @@ import {
   RiLeafLine,
   RiLogoutBoxLine,
 } from "@remixicon/react";
+import { TeamSwitcher } from "./logo";
 
 // This is sample data.
 const data = {
@@ -50,40 +54,20 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "#",
+          url: "/",
           icon: RiScanLine,
         },
         {
-          title: "Insights",
-          url: "#",
+          title: "Trades",
+          url: "/trades",
           icon: RiBardLine,
         },
-        {
-          title: "Contacts",
-          url: "#",
-          icon: RiUserFollowLine,
-          isActive: true,
-        },
-        {
-          title: "Tools",
-          url: "#",
-          icon: RiCodeSSlashLine,
-        },
-        {
-          title: "Integration",
-          url: "#",
-          icon: RiLoginCircleLine,
-        },
-        {
-          title: "Layouts",
-          url: "#",
-          icon: RiLayoutLeftLine,
-        },
-        {
-          title: "Reports",
-          url: "#",
-          icon: RiLeafLine,
-        },
+
+        // {
+        //   title: "Tools",
+        //   url: "/tools",
+        //   icon: RiCodeSSlashLine,
+        // },
       ],
     },
     {
@@ -106,11 +90,15 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        {/* <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
         <hr className="border-t border-border mx-2 -mt-px" />
+        {/* 
+      
         <SearchForm className="mt-3" /> */}
       </SidebarHeader>
       <SidebarContent>
@@ -127,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuButton
                       asChild
                       className="group/menu-button font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
-                      isActive={item.isActive}
+                      isActive={pathname === item.url}
                     >
                       <a href={item.url}>
                         {item.icon && (
