@@ -218,7 +218,7 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
             />
           )}
           {row.original.status === "Closed" && "- "}
-          {row.original.status}
+          {row.original.status === "closed" ? "- closed" : "+ active"}
         </Badge>
       </div>
     ),

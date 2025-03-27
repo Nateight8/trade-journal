@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import AddJournal from "@/components/journal/add-journal";
 
 import TradeLogTable from "@/components/table/trade-logs-table";
+import Carlender from "../carlender/_components/carlender";
 
 export default async function Page() {
   const session = await auth();
@@ -22,7 +23,8 @@ export default async function Page() {
         </div>
       </div>
       <div className="h-[calc(100vh-15rem)] min-h-[100vh] flex-1 md:min-h-min py-4">
-        <TradeLogTable />
+        {/* <TradeLogTable /> */}
+        <Carlender />
       </div>
     </>
   );
