@@ -122,8 +122,8 @@ export function JournalForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Long">Long</SelectItem>
-                      <SelectItem value="Short">Short</SelectItem>
+                      <SelectItem value="Long">I&apos;m Buying</SelectItem>
+                      <SelectItem value="Short">I&apos;m Selling</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

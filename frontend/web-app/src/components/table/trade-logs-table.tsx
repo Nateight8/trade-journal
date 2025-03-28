@@ -65,7 +65,6 @@ import {
   RiBardLine,
   RiFilter3Line,
   RiSearch2Line,
-  RiCheckLine,
   RiMoreLine,
 } from "@remixicon/react";
 import {
@@ -82,6 +81,8 @@ import tradeOperations from "@/graphql/operations/trade-operations";
 import { useQuery } from "@apollo/client";
 
 import UpdateJournal from "@/components/journal/update-journal";
+import { PulsatingDot } from "@/components/ui/pulsating-dot";
+import CurrencyPairFlag from "@/components/ui/currency-pair-flag";
 
 interface TradeLog {
   id: string;
@@ -155,18 +156,15 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
   {
     header: "Instrument",
     accessorKey: "instrument",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3">
-        <Image
-          className="rounded-full"
-          src={row.original.image}
-          width={32}
-          height={32}
-          alt={row.getValue("instrument")}
-        />
-        <div className="font-medium">{row.getValue("instrument")}</div>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const instrument = row.getValue("instrument") as string;
+      return (
+        <div className="flex items-center gap-2">
+          <CurrencyPairFlag currencyPair={instrument || "USD/EUR"} size="sm" />
+          <span className="font-medium">{instrument}</span>
+        </div>
+      );
+    },
     size: 180,
     enableHiding: false,
   },
@@ -182,17 +180,45 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
     header: "Position",
     accessorKey: "position",
     cell: ({ row }) => (
-      <Badge
-        variant="outline"
+      <div
         className={cn(
-          "gap-1 py-0.5 px-1 text-xs w-1/2",
+          "flex items-center gap-1",
           row.getValue("position") === "Long"
-            ? "text-emerald-500 border-emerald-500"
-            : "text-red-500 border-red-500"
+            ? "text-emerald-500"
+            : "text-red-500"
         )}
       >
-        {row.getValue("position")}
-      </Badge>
+        {row.getValue("position") === "Long" ? (
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 9H11L7.5 4.5L4 9Z"
+              fill="currentColor"
+              fillRule="evenodd"
+            />
+          </svg>
+        ) : (
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 6H11L7.5 10.5L4 6Z"
+              fill="currentColor"
+              fillRule="evenodd"
+            />
+          </svg>
+        )}
+        {row.getValue("position") === "Long" ? "Buy" : "Sell"}
+      </div>
     ),
     size: 110,
   },
@@ -201,25 +227,21 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
     accessorKey: "status",
     cell: ({ row }) => (
       <div className="flex items-center h-full">
-        <Badge
-          variant="outline"
+        <PulsatingDot
+          variant={row.original.status === "ACTIVE" ? "success" : "muted"}
+          size="sm"
+          active={row.original.status === "ACTIVE"}
+        />{" "}
+        <span
           className={cn(
-            "gap-1 py-0.5 px-2 text-sm",
-            row.original.status === "Closed"
-              ? "text-muted-foreground"
-              : "text-primary-foreground"
+            "text-sm ms-2",
+            row.original.status === "ACTIVE"
+              ? "text-emerald-500"
+              : "text-muted-foreground"
           )}
         >
-          {row.original.status === "Active" && (
-            <RiCheckLine
-              className="text-emerald-500"
-              size={14}
-              aria-hidden="true"
-            />
-          )}
-          {row.original.status === "Closed" && "- "}
-          {row.original.status === "closed" ? "- closed" : "+ active"}
-        </Badge>
+          {row.original.status === "ACTIVE" ? "Running" : "Closed"}
+        </span>
       </div>
     ),
     size: 110,
@@ -425,6 +447,8 @@ export default function TradeLogTable() {
       </div>
     );
   }
+
+  console.log(tradesData);
 
   return (
     <div className="space-y-4">
@@ -649,7 +673,7 @@ export default function TradeLogTable() {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                key={row.original.volume}
+                key={row.original.id}
                 data-state={row.getIsSelected() && "selected"}
                 className="border-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg h-px hover:bg-accent/50"
               >

@@ -23,8 +23,8 @@ export default async function Page() {
         </div>
       </div>
       <div className="h-[calc(100vh-15rem)] min-h-[100vh] flex-1 md:min-h-min py-4">
-        {/* <TradeLogTable /> */}
-        <Carlender />
+        <TradeLogTable />
+        {/* <Carlender /> */}
       </div>
     </>
   );
