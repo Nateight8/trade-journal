@@ -59,11 +59,11 @@ const data = {
           icon: RiBardLine,
         },
 
-        // {
-        //   title: "Tools",
-        //   url: "/tools",
-        //   icon: RiCodeSSlashLine,
-        // },
+        {
+          title: "Journal",
+          url: "/journals",
+          icon: RiBardLine,
+        },
       ],
     },
     {
