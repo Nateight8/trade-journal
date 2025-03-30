@@ -1,4 +1,3 @@
-import { trades } from "../../db/schema.js";
 import { GraphQLError } from "graphql";
 import GraphqlContext from "../../types/types.utils.js";
 import { eq, and, asc } from "drizzle-orm";
@@ -35,12 +34,12 @@ const tradeResolvers = {
       const userId = session.user.id;
 
       try {
-        const userTrades = await db.query.trades.findMany({
-          where: (trades, { eq }) => eq(trades.userId, userId),
-          orderBy: (trades, { asc }) => [asc(trades.createdAt)],
-        });
+        // const userTrades = await db.query.trades.findMany({
+        //   where: (trades, { eq }) => eq(trades.userId, userId),
+        //   orderBy: (trades, { asc }) => [asc(trades.createdAt)],
+        // });
 
-        return userTrades;
+        return [];
       } catch (error) {
         throw new GraphQLError("Failed to fetch trades", {
           extensions: {
@@ -88,24 +87,24 @@ const tradeResolvers = {
           riskToReward: riskToReward.toString(),
         };
 
-        const newTrade = await db
-          .insert(trades)
-          .values({
-            ...input,
-            ...numericValues,
-            position,
-            tradeStatus: "ACTIVE",
-            tradeOutcome: "RUNNING",
-            userId: userId,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          })
-          .returning();
+        // const newTrade = await db
+        //   .insert(trades)
+        //   .values({
+        //     ...input,
+        //     ...numericValues,
+        //     position,
+        //     tradeStatus: "ACTIVE",
+        //     tradeOutcome: "RUNNING",
+        //     userId: userId,
+        //     createdAt: new Date(),
+        //     updatedAt: new Date(),
+        //   })
+        //   .returning();
 
         return {
           status: true,
           message: "Trade created successfully",
-          id: newTrade[0].id,
+          // id: newTrade[0].id,
         };
       } catch (error) {
         throw new GraphQLError("Failed to create trade", {
@@ -132,33 +131,33 @@ const tradeResolvers = {
       const userId = session.user.id;
 
       try {
-        const [existingTrade] = await db
-          .select()
-          .from(trades)
-          .where(and(eq(trades.id, id), eq(trades.userId, userId)));
+        // const [existingTrade] = await db
+        //   .select()
+        //   .from(trades)
+        //   .where(and(eq(trades.id, id), eq(trades.userId, userId)));
 
-        if (!existingTrade) {
-          throw new GraphQLError("Trade not found", {
-            extensions: {
-              code: "NOT_FOUND",
-            },
-          });
-        }
+        // if (!existingTrade) {
+        //   throw new GraphQLError("Trade not found", {
+        //     extensions: {
+        //       code: "NOT_FOUND",
+        //     },
+        //   });
+        // }
 
         // If outcome is WON or LOST, automatically set status to CLOSED
-        const updateData = {
-          ...input,
-          tradeStatus:
-            input.tradeOutcome === "WON" || input.tradeOutcome === "LOST"
-              ? "CLOSED"
-              : input.tradeStatus,
-          updatedAt: new Date(),
-        };
+        // const updateData = {
+        //   ...input,
+        //   tradeStatus:
+        //     input.tradeOutcome === "WON" || input.tradeOutcome === "LOST"
+        //       ? "CLOSED"
+        //       : input.tradeStatus,
+        //   updatedAt: new Date(),
+        // };
 
-        await db
-          .update(trades)
-          .set(updateData)
-          .where(and(eq(trades.id, id), eq(trades.userId, userId)));
+        // await db
+        //   .update(trades)
+        //   .set(updateData)
+        //   .where(and(eq(trades.id, id), eq(trades.userId, userId)));
 
         return {
           status: true,
