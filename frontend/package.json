@@ -1,0 +1,7 @@
+{
+	"dependencies": {
+		"@tiptap/core": "^2.11.6",
+		"@tiptap/extension-heading": "^2.11.6",
+		"@tiptap/extension-text": "^2.11.6"
+	}
+}

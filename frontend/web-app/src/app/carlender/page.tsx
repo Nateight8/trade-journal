@@ -1,4 +1,3 @@
-import { Outcome } from "@/components/ui/outcome";
 import CurrencyPairFlag from "@/components/ui/currency-pair-flag";
 
 export default function Page() {

@@ -1,6 +1,27 @@
 import { z } from "zod";
 
-export const tradeJournalSchema = z.object({
+// export const  = z.object({
+
+//   // Rest of the schema remains the same
+//   volume: z.number().min(0.1, "Volume must be at least 0.1"),
+
+//   position: z.enum(["Long", "Short"], {
+//     required_error: "Position is required",
+//   }),
+// });
+
+//
+
+// // Default values for the form
+// export const defaultValues: TradeJournalFormValues = {
+//   // Basic Trade Information
+//   instrument: "",
+//   volume: 1,
+//   position: "Long",
+// };
+
+const tradeJournalSchema = z.object({
+  // Trade Setup
   instrument: z
     .string()
     // Trim whitespace
@@ -29,20 +50,27 @@ export const tradeJournalSchema = z.object({
       return `${cleanedVal.slice(0, 3)}/${cleanedVal.slice(3)}`;
     }),
 
-  // Rest of the schema remains the same
-  volume: z.number().min(0.1, "Volume must be at least 0.1"),
-
-  position: z.enum(["Long", "Short"], {
-    required_error: "Position is required",
+  entryPrice: z.number().min(0, {
+    message: "Entry price must be a positive number.",
   }),
+
+  strategy: z.string().min(2, {
+    message: "Strategy must be at least 2 characters.",
+  }),
+  setupRating: z.number().int().min(1).max(5, {
+    message: "Rating must be an integer between 1 and 5.",
+  }),
+
+  // Risk Management
+  takeProfit: z.number().min(0, {
+    message: "Take profit must be zero or a positive number.",
+  }),
+  stopLoss: z.number().min(0, {
+    message: "Stop loss must be zero or a positive number.",
+  }),
+  // Notes (optional)
+  notes: z.string().optional(),
 });
 
 export type TradeJournalFormValues = z.infer<typeof tradeJournalSchema>;
-
-// Default values for the form
-export const defaultValues: TradeJournalFormValues = {
-  // Basic Trade Information
-  instrument: "",
-  volume: 1,
-  position: "Long",
-};
+export default tradeJournalSchema;

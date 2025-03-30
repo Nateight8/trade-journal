@@ -3,8 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ApolloWrapper } from "@/components/providers/apollo-wraper";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppNav } from "@/components/navigation/app-nav";
+import LayoutContainer from "@/components/ui/layout-container";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,12 +35,12 @@ export default function RootLayout({
         <ApolloWrapper>
           <SidebarProvider>
             <AppSidebar />
-            <SidebarInset className="overflow-hidden px-4 md:px-6 lg:px-8">
-              <main>
+            <LayoutContainer>
+              <main className="h-screen flex flex-col">
                 <AppNav />
-                {children}
+                <div className="flex-1">{children}</div>
               </main>
-            </SidebarInset>
+            </LayoutContainer>
           </SidebarProvider>
         </ApolloWrapper>
       </body>

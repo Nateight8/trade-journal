@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import AddJournal from "@/components/journal/add-journal";
 
 import TradeLogTable from "@/components/table/trade-logs-table";
-import Carlender from "../carlender/_components/carlender";
+// import Carlender from "../carlender/_components/carlender";
 
 export default async function Page() {
   const session = await auth();

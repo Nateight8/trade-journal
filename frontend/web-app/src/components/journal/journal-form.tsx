@@ -19,13 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  tradeJournalSchema,
-  type TradeJournalFormValues,
-  defaultValues,
-} from "@/lib/schemas/trade-journal";
+import tradeJournalSchema from "@/lib/schemas/trade-journal";
 import { toast } from "sonner";
 import { MutationFunction, OperationVariables } from "@apollo/client";
+import { TradeJournalFormValues } from "@/lib/schemas/trade-journal";
 
 interface CreateTradeResponse {
   createTrade: {
@@ -44,7 +41,14 @@ export function JournalForm({
 }) {
   const form = useForm<TradeJournalFormValues>({
     resolver: zodResolver(tradeJournalSchema),
-    defaultValues,
+    defaultValues: {
+      instrument: "",
+      entryPrice: 0,
+      strategy: "",
+      setupRating: 0,
+      takeProfit: 0,
+      stopLoss: 0,
+    },
   });
 
   async function onSubmit(data: TradeJournalFormValues) {
@@ -53,7 +57,6 @@ export function JournalForm({
         variables: {
           input: {
             ...data,
-            volume: Number(data.volume),
           },
         },
       });
@@ -89,7 +92,7 @@ export function JournalForm({
             />
             <FormField
               control={form.control}
-              name="volume"
+              name="notes"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Volume</FormLabel>
@@ -108,7 +111,7 @@ export function JournalForm({
             />
             <FormField
               control={form.control}
-              name="position"
+              name=""
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Position</FormLabel>

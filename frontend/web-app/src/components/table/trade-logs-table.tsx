@@ -97,7 +97,7 @@ interface TradeLog {
     image: string;
   };
   note: string;
-  riskReward: string;
+  riskToReward: number;
   __typename: string;
 }
 
@@ -183,12 +183,12 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
       <div
         className={cn(
           "flex items-center gap-1",
-          row.getValue("position") === "Long"
+          row.getValue("position") === "BUY"
             ? "text-emerald-500"
             : "text-red-500"
         )}
       >
-        {row.getValue("position") === "Long" ? (
+        {row.getValue("position") === "BUY" ? (
           <svg
             width="15"
             height="15"
@@ -217,7 +217,7 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
             />
           </svg>
         )}
-        {row.getValue("position") === "Long" ? "Buy" : "Sell"}
+        {row.getValue("position") === "BUY" ? "Buy" : "Sell"}
       </div>
     ),
     size: 110,
@@ -231,15 +231,8 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
           variant={row.original.status === "ACTIVE" ? "success" : "muted"}
           size="sm"
           active={row.original.status === "ACTIVE"}
-        />{" "}
-        <span
-          className={cn(
-            "text-sm ms-2",
-            row.original.status === "ACTIVE"
-              ? "text-emerald-500"
-              : "text-muted-foreground"
-          )}
-        >
+        />
+        <span className="text-sm ms-2 font-medium">
           {row.original.status === "ACTIVE" ? "Running" : "Closed"}
         </span>
       </div>
@@ -268,14 +261,16 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
     size: 110,
   },
   {
-    header: "Risk/Reward",
-    accessorKey: "riskReward",
-    cell: ({ row }) => (
-      <div className="text-sm text-muted-foreground">
-        {row.getValue("riskReward")}
-      </div>
-    ),
-    size: 90,
+    accessorKey: "riskToReward",
+    header: "R:R",
+    cell: ({ row }) => {
+      const value = row.getValue("riskToReward");
+      return (
+        <div className="flex items-center">
+          {typeof value === "number" ? `1:${Math.round(value)}` : "1:0"}
+        </div>
+      );
+    },
   },
   {
     header: "Media/Chart",
@@ -352,7 +347,7 @@ export default function TradeLogTable() {
         image: "/images/chart.png",
       },
       note: trade.tradeNote || "write a note after the trade", // Use the note from API if available, otherwise empty string
-      riskReward: "1:2",
+      riskToReward: 2,
     }));
   }, [tradesData]);
 

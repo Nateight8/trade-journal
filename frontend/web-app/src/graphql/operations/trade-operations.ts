@@ -7,6 +7,7 @@ const tradeOperations = {
         createTrade(input: $input) {
           message
           status
+          id
         }
       }
     `,
@@ -25,13 +26,18 @@ const tradeOperations = {
     getAllTrades: gql`
       query GetAllTrades {
         trades {
+          entryPrice
           id
           instrument
+          note
+          riskToReward
+          setupRating
+          stopLoss
+          strategy
+          takeProfit
+          tradeOutcome
+          tradeStatus
           position
-          volume
-          status
-          outcome
-          tradeNote
         }
       }
     `,
