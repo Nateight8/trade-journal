@@ -5,16 +5,23 @@ import {
   text,
   primaryKey,
   integer,
+  numeric,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccount } from "next-auth/adapters";
-import { env } from "../env.js";
 
-const pool = postgres(env.AUTH_DRIZZLE_URL, { max: 1 });
+// Define enums first
+export const tradeStatusEnum = pgEnum("trade_status", ["ACTIVE", "CLOSED"]);
+export const tradeOutcomeEnum = pgEnum("trade_outcome", [
+  "WON",
+  "LOST",
+  "RUNNING",
+  "BREAKEVEN",
+]);
 
-export const db = drizzle(pool);
-
+// Define tables
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -23,6 +30,28 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+});
+
+export const trades = pgTable("trade", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  entryPrice: numeric("entry_price").notNull(),
+  takeProfit: numeric("take_profit").notNull(),
+  stopLoss: numeric("stop_loss").notNull(),
+  riskToReward: numeric("risk_to_reward").notNull(),
+  instrument: text("instrument").notNull(),
+  position: text("position"),
+  setupRating: integer("setup_rating").notNull(),
+  strategy: text("strategy").notNull(),
+  tradeStatus: tradeStatusEnum("trade_status").notNull().default("ACTIVE"),
+  tradeOutcome: tradeOutcomeEnum("trade_outcome").notNull().default("RUNNING"),
+  note: text("note"),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
 });
 
 export const accounts = pgTable(
@@ -97,3 +126,7 @@ export const authenticators = pgTable(
     },
   ]
 );
+
+// Initialize database connection after all tables are defined
+const queryClient = postgres(process.env.AUTH_DRIZZLE_URL || "");
+export const db = drizzle(queryClient) as any;
