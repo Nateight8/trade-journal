@@ -10,7 +10,7 @@ import typeDefs from "@/graphql/typeDefs/index.js";
 import { ExpressAuth, getSession } from "@auth/express";
 import { authConfig } from "@/config/auth.config.js";
 import { currentSession } from "@/middleware/auth.middleware.js";
-// import { db } from "@/db/index.js";
+import { db } from "@/db/index.js";
 
 interface MyContext {
   token?: String;
@@ -53,7 +53,7 @@ app.use(
 
       console.log("Session:", session);
 
-      return { session };
+      return { session, db };
     },
   })
 );
