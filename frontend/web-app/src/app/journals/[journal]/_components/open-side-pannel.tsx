@@ -27,12 +27,12 @@ export default function OpenSidePannel({
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="inline-flex -space-x-px rounded-md shadow-xs rtl:space-x-reverse">
+      <div className="">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10"
-              variant="outline"
+              className="rounded-none shadow-none  focus-visible:z-10"
+              variant="ghost"
               size="icon"
               aria-label="Flip Horizontal"
               onClick={showWhichPanel}
@@ -47,8 +47,8 @@ export default function OpenSidePannel({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus-visible:z-10"
-              variant="outline"
+              className="rounded-none shadow-none focus-visible:z-10"
+              variant="ghost"
               size="icon"
               aria-label="Flip Horizontal"
               onClick={toggleSplitView}

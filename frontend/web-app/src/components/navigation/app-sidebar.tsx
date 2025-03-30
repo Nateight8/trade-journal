@@ -111,7 +111,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuButton
                       asChild
                       className="group/menu-button font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
-                      isActive={pathname === item.url}
+                      isActive={
+                        item.url === "/"
+                          ? pathname === item.url
+                          : pathname.startsWith(item.url)
+                      }
                     >
                       <a href={item.url}>
                         {item.icon && (

@@ -7,6 +7,8 @@ import OpenSidePannel from "./open-side-pannel";
 import { useState } from "react";
 
 import ChatClient from "./chat";
+import RichEditor from "./rich-editor";
+import { ScrollArea } from "@/components/ui/scroll-area";
 export default function JournalClient() {
   // Three view modes: "left", "right", "split"
   const [viewMode, setViewMode] = useState("left");
@@ -46,7 +48,7 @@ export default function JournalClient() {
           {/* <div className="w-full flex justify-end gap-2">
               <OpenSidePannel setViewMode={setViewMode} side="left" />
             </div> */}
-          <ChatClient />
+          <ChatClient setViewMode={setViewMode} />
         </ResizablePanel>
       )}
 
@@ -56,12 +58,13 @@ export default function JournalClient() {
       {/* Right panel - hidden when in left-only mode */}
       {viewMode !== "left" && (
         <ResizablePanel defaultSize={getRightPanelSize()}>
-          <div className="h-full bg-muted/50 p-4 relative">
-            <div className="w-full flex justify-end gap-2">
+          <ScrollArea className="h-[100svh] bg-muted/50 p-4 md:p-8 relative ">
+            <div className="w-full bg-background flex justify-end gap-2 sticky top-0">
               <OpenSidePannel setViewMode={setViewMode} side="right" />
             </div>
             {/* Right panel content here */}
-          </div>
+            <RichEditor />
+          </ScrollArea>
         </ResizablePanel>
       )}
     </ResizablePanelGroup>
